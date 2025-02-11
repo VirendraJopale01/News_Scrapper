@@ -7,6 +7,9 @@ def write_to_csv(AllData, search_engine):
     if not AllData:
         print(f"No data collected for {search_engine}. Skipping CSV write.")
         return
+    df=pd.DataFrame(AllData)
+    df=df.drop_duplicates(subset='title',keep='first')
+    df=df.sort_values(by='page_number',ascending=True).reset_index(drop=True)
     
     filename = f"results_{search_engine}.csv"
     
@@ -23,8 +26,8 @@ def write_to_csv(AllData, search_engine):
     with open(complete_path, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=keys)
         writer.writeheader()
-        writer.writerows(AllData)
- 
+        # writer.writerows(AllData)
+        df.to_csv(f'{folder_path}//results_{search_engine}.csv')
     print(f"Results saved to {filename}")
 
 def read_csv():
